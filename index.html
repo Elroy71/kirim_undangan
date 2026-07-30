@@ -184,6 +184,32 @@
       color: var(--text);
     }
 
+    .tb-stats {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: #F1F5F9;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-left: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .stat-sent {
+      color: var(--green);
+    }
+
+    .stat-divider {
+      color: #CBD5E1;
+      font-weight: 400;
+    }
+
+    .stat-remain {
+      color: var(--sub);
+    }
+
     .tb-avatar {
       margin-left: auto;
       width: 36px;
@@ -527,12 +553,14 @@
       margin-bottom: 16px;
       gap: 12px;
     }
+
     .filter-chips {
       display: flex;
       gap: 8px;
       overflow-x: auto;
       padding-bottom: 4px;
     }
+
     .chip {
       padding: 6px 14px;
       border-radius: 20px;
@@ -545,9 +573,11 @@
       white-space: nowrap;
       transition: all 0.2s;
     }
+
     .chip:hover {
       background: #F1F5F9;
     }
+
     .chip.active {
       background: var(--text);
       color: var(--white);
@@ -622,6 +652,11 @@
     <!-- TOPBAR -->
     <div class="topbar">
       <div class="tb-title">Kirim Undangan</div>
+      <div class="tb-stats" id="topStats">
+        <span class="stat-sent" id="statSent">0 Terkirim</span>
+        <span class="stat-divider">|</span>
+        <span class="stat-remain" id="statRemain">0 Sisa</span>
+      </div>
       <div class="tb-avatar">W</div>
     </div>
 
@@ -813,7 +848,7 @@
         return;
       }
       card.style.display = 'flex';
-      
+
       const guest = filteredGuests[index];
 
       // Update Info
@@ -848,6 +883,17 @@
       // Update Navigation Button States
       btnPrev.disabled = index === 0;
       btnNext.disabled = index === filteredGuests.length - 1;
+
+      updateDashboardStats();
+    }
+
+    function updateDashboardStats() {
+      const total = guestBook.length;
+      const sent = guestBook.filter(g => g.sentWA || g.sentUrl || g.sentText).length;
+      const remain = total - sent;
+
+      document.getElementById('statSent').innerText = `${sent} Terkirim`;
+      document.getElementById('statRemain').innerText = `${remain} Sisa`;
     }
 
     function updateButtonState(btnEl, isSent, textNormal, textSent) {
@@ -884,12 +930,12 @@
         renderGuest(currentIndex);
       }
     }
-    
+
     function setFilter(filterType, btnEl) {
       // Update Active Chip
       document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
       btnEl.classList.add('active');
-      
+
       // Filter Logic
       if (filterType === 'semua') {
         filteredGuests = [...guestBook];
@@ -900,7 +946,7 @@
       } else if (filterType === 'vip') {
         filteredGuests = guestBook.filter(g => g.level.toLowerCase().includes('vip'));
       }
-      
+
       currentIndex = 0;
       if (filteredGuests.length > 0) {
         renderGuest(currentIndex);

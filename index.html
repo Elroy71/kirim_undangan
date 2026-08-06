@@ -402,7 +402,6 @@
 
     .btn-wa:hover:not(.sent) {
       background: var(--green-bg);
-      transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(16, 185, 129, 0.15);
     }
 
@@ -426,7 +425,6 @@
 
     .btn-copy:hover:not(.sent) {
       background: var(--blue-bg);
-      transform: translateY(-2px);
     }
 
     .btn-copy.sent {
@@ -498,52 +496,7 @@
       background: #F8FAFC;
     }
 
-    /* Check Icon Overlay */
-    .icon-check-circle {
-      display: none;
-      width: 24px;
-      height: 24px;
-      background: var(--white);
-      border-radius: 50%;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      right: 16px;
-      z-index: 2;
-    }
 
-    .icon-check-circle svg {
-      width: 14px;
-      height: 14px;
-      stroke: var(--green);
-      stroke-width: 3;
-      fill: none;
-    }
-
-    .btn-copy.sent .icon-check-circle svg {
-      stroke: var(--blue);
-    }
-
-    .sent .icon-check-circle {
-      display: flex;
-      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-
-    .sent .icon-main {
-      opacity: 0;
-    }
-
-    @keyframes popIn {
-      0% {
-        transform: scale(0);
-        opacity: 0;
-      }
-
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
 
     /* Filter & Bulk Styles */
     .filter-bar {
@@ -582,6 +535,157 @@
       background: var(--text);
       color: var(--white);
       border-color: var(--text);
+    }
+
+    /* MOBILE RESPONSIVE */
+    @media screen and (max-width: 426px) {
+
+      html,
+      body {
+        overflow-x: hidden;
+        width: 100%;
+      }
+
+      .sidebar {
+        display: none !important;
+      }
+
+      .sb-logo {
+        display: none !important;
+      }
+
+      .sb-nav {
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        gap: 0;
+      }
+
+      .sb-item {
+        width: 48px;
+        height: 48px;
+        flex-shrink: 0;
+      }
+
+      .sb-item span {
+        display: none;
+      }
+
+      .sb-item.active {
+        box-shadow: 0 2px 8px rgba(196, 24, 106, 0.4);
+      }
+
+      .main {
+        margin-left: 0;
+        margin-bottom: 0;
+        width: 100%;
+        max-width: 100vw;
+      }
+
+      .topbar {
+        padding: 0 16px;
+        width: 100%;
+      }
+
+      .tb-title {
+        font-size: 15px;
+        white-space: nowrap;
+      }
+
+      .tb-stats {
+        margin-left: auto;
+        padding: 6px 10px;
+        font-size: 11px;
+        white-space: nowrap;
+      }
+
+      .tb-avatar {
+        display: none;
+      }
+
+      .page-kirim {
+        padding: 16px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .kirim-wrapper {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .filter-bar {
+        width: 100%;
+      }
+
+      .filter-chips {
+        width: 100%;
+        max-width: calc(100vw - 32px);
+        padding-bottom: 8px;
+      }
+
+      .kirim-card {
+        width: 100%;
+      }
+
+      .kc-header,
+      .kc-body,
+      .kc-footer {
+        padding: 16px;
+        box-sizing: border-box;
+      }
+
+      .kc-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .kc-title {
+        font-size: 18px;
+      }
+
+      .guest-info-grid {
+        grid-template-columns: 1fr;
+        padding: 16px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .info-item.full {
+        grid-column: span 1;
+      }
+
+      .actions-row {
+        flex-direction: row;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .btn-action {
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .kc-footer {
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .kc-pagination-info {
+        text-align: center;
+      }
+
+      .kc-nav-btns {
+        width: 100%;
+      }
+
+      .btn-nav {
+        flex: 1;
+      }
     }
   </style>
 </head>
@@ -717,6 +821,16 @@
                 <div class="info-label">Max RSVP</div>
                 <div class="info-value" id="gRsvp">2 Orang</div>
               </div>
+              <div class="info-item full">
+                <div class="info-label" style="display:flex; align-items:center;">
+                  Kode Undangan
+                  <span id="btnToggleCode" onclick="toggleCode()"
+                    style="margin-left:8px; cursor:pointer; color:var(--sub); display:flex; align-items:center;"
+                    title="Lihat"></span>
+                </div>
+                <div class="info-value" id="gCode"
+                  style="letter-spacing: 2px; font-family: monospace; font-size: 16px;">••••••••</div>
+              </div>
             </div>
 
             <div class="action-container">
@@ -727,9 +841,6 @@
                   </path>
                 </svg>
                 <span>Kirim via WhatsApp</span>
-                <div class="icon-check-circle"><svg viewBox="0 0 24 24">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg></div>
               </button>
 
               <div class="actions-row">
@@ -739,9 +850,6 @@
                     <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
                   </svg>
                   <span>Copy URL</span>
-                  <div class="icon-check-circle"><svg viewBox="0 0 24 24">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg></div>
                 </button>
                 <button class="btn-action btn-copy" id="btnText" onclick="triggerAction('text')">
                   <svg class="icon-main" viewBox="0 0 24 24">
@@ -749,9 +857,6 @@
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                   </svg>
                   <span>Copy Text</span>
-                  <div class="icon-check-circle"><svg viewBox="0 0 24 24">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg></div>
                 </button>
               </div>
             </div>
@@ -827,6 +932,10 @@
     const elLevel = document.getElementById('gLevel');
     const elEvent = document.getElementById('gEvent');
     const elRsvp = document.getElementById('gRsvp');
+    const elCode = document.getElementById('gCode');
+    const btnToggleCode = document.getElementById('btnToggleCode');
+
+    let codeVisible = false;
 
     const btnWa = document.getElementById('btnWa');
     const btnUrl = document.getElementById('btnUrl');
@@ -842,6 +951,30 @@
     const card = document.getElementById('kirimCard');
 
     // --- FUNCTIONS ---
+    function toggleCode() {
+      codeVisible = !codeVisible;
+      renderCode();
+    }
+
+    function renderCode() {
+      if (filteredGuests.length === 0) return;
+      const guest = filteredGuests[currentIndex];
+      const code = guest.code || `WVT${guest.id.toString().padStart(4, '0')}`;
+
+      const eyeIcon = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+      const eyeOffIcon = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+
+      if (codeVisible) {
+        elCode.innerText = code;
+        btnToggleCode.innerHTML = eyeOffIcon;
+        btnToggleCode.title = 'Sembunyikan';
+      } else {
+        elCode.innerText = '••••••••';
+        btnToggleCode.innerHTML = eyeIcon;
+        btnToggleCode.title = 'Lihat';
+      }
+    }
+
     function renderGuest(index) {
       if (filteredGuests.length === 0) {
         card.style.display = 'none';
@@ -857,6 +990,9 @@
       elLevel.innerText = guest.level;
       elEvent.innerText = guest.event;
       elRsvp.innerText = `${guest.maxRsvp} Orang`;
+
+      codeVisible = false;
+      renderCode();
 
       // Update Action Buttons State
       updateButtonState(btnWa, guest.sentWA, 'Kirim via WhatsApp', 'Terkirim WA');
@@ -917,8 +1053,11 @@
       // Re-render current guest to update UI
       renderGuest(currentIndex);
 
-      // Optional: simulate copy to clipboard or open WA link here
-      if (type === 'wa') console.log(`Membuka WhatsApp untuk ${guest.name}...`);
+      // Open WhatsApp or copy text
+      if (type === 'wa') {
+        const text = `Halo ${guest.sapaan} ${guest.name},\nKami mengundang Anda untuk hadir di acara kami. Cek undangan: https://wevitation.com/undangan/${guest.id}`;
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+      }
       if (type === 'url') console.log(`URL ${guest.name} dicopy...`);
       if (type === 'text') console.log(`Teks ${guest.name} dicopy...`);
     }

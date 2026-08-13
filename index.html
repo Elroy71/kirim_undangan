@@ -501,7 +501,7 @@
     /* Filter & Bulk Styles */
     .filter-bar {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       margin-bottom: 16px;
       gap: 12px;
@@ -509,6 +509,7 @@
 
     .filter-chips {
       display: flex;
+      justify-content: center;
       gap: 8px;
       overflow-x: auto;
       padding-bottom: 4px;
@@ -535,6 +536,27 @@
       background: var(--text);
       color: var(--white);
       border-color: var(--text);
+    }
+
+    /* Additional UI Concepts */
+
+    .btn-undo-large {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--white);
+      color: var(--text);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-undo-large:hover {
+      background: #F1F5F9;
     }
 
     /* MOBILE RESPONSIVE */
@@ -618,6 +640,8 @@
 
       .filter-bar {
         width: 100%;
+        flex-direction: column;
+        align-items: stretch;
       }
 
       .filter-chips {
@@ -628,6 +652,14 @@
 
       .kirim-card {
         width: 100%;
+        display: flex;
+        flex-direction: column;
+        max-height: calc(100vh - 190px);
+      }
+
+      .kc-body {
+        overflow-y: auto;
+        flex: 1;
       }
 
       .kc-header,
@@ -648,14 +680,9 @@
       }
 
       .guest-info-grid {
-        grid-template-columns: 1fr;
         padding: 16px;
         width: 100%;
         box-sizing: border-box;
-      }
-
-      .info-item.full {
-        grid-column: span 1;
       }
 
       .actions-row {
@@ -773,7 +800,6 @@
             <button class="chip active" onclick="setFilter('semua', this)">Semua</button>
             <button class="chip" onclick="setFilter('belum', this)">Belum Dikirim</button>
             <button class="chip" onclick="setFilter('sudah', this)">Sudah Dikirim</button>
-            <button class="chip" onclick="setFilter('vip', this)">VIP</button>
           </div>
         </div>
 
@@ -781,109 +807,118 @@
           <div class="progress-bar" id="progressBar"></div>
         </div>
 
-        <div class="kirim-card" id="kirimCard">
+          <div class="kirim-card" id="kirimCard">
 
-          <div class="kc-header">
-            <div class="kc-title-wrap">
-              <div class="kc-title">Detail Tamu</div>
-              <div class="kc-subtitle">Kirim undangan untuk tamu ini</div>
-            </div>
-            <div class="kc-status-badge" id="statusBadge">
-              <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-              </svg>
-              Belum Dikirim
-            </div>
-          </div>
-
-          <div class="kc-body">
-
-            <div class="guest-info-grid">
-              <div class="info-item full">
-                <div class="info-label">Sapaan & Nama Tamu</div>
-                <div class="info-value name" id="gName">Yth. Bapak/Ibu John Doe</div>
+            <div class="kc-header">
+              <div class="kc-title-wrap">
+                <div class="kc-title">Detail Tamu</div>
               </div>
-              <div class="info-item">
-                <div class="info-label">Grup Tamu</div>
-                <div class="info-value" id="gGroup">Keluarga</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">Level</div>
-                <div class="info-value" id="gLevel">VIP</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">Acara</div>
-                <div class="info-value" id="gEvent">Akad, Resepsi</div>
-              </div>
-              <div class="info-item">
-                <div class="info-label">Max RSVP</div>
-                <div class="info-value" id="gRsvp">2 Orang</div>
-              </div>
-              <div class="info-item full">
-                <div class="info-label" style="display:flex; align-items:center;">
-                  Kode Undangan
-                  <span id="btnToggleCode" onclick="toggleCode()"
-                    style="margin-left:8px; cursor:pointer; color:var(--sub); display:flex; align-items:center;"
-                    title="Lihat"></span>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <button onclick="undoStatus(event)" id="btnUndoGlobal" class="btn-undo-large" style="display: none;"
+                  title="Batalkan status terkirim">
+                  <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                    <path d="M3 7v6h6"></path>
+                    <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path>
+                  </svg> Undo
+                </button>
+                <div class="kc-status-badge" id="statusBadge">
+                  <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                  Belum Dikirim
                 </div>
-                <div class="info-value" id="gCode"
-                  style="letter-spacing: 2px; font-family: monospace; font-size: 16px;">••••••••</div>
               </div>
             </div>
 
-            <div class="action-container">
-              <button class="btn-action btn-wa" id="btnWa" onclick="triggerAction('wa')">
-                <svg class="icon-main" viewBox="0 0 24 24">
-                  <path
-                    d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
-                  </path>
-                </svg>
-                <span>Kirim via WhatsApp</span>
-              </button>
+            <div class="kc-body">
 
-              <div class="actions-row">
-                <button class="btn-action btn-copy" id="btnUrl" onclick="triggerAction('url')">
+              <div class="guest-info-grid">
+                <div class="info-item full">
+                  <div class="info-label">Sapaan & Nama Tamu</div>
+                  <div class="info-value name" id="gName">Yth. Bapak/Ibu John Doe</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Grup Tamu</div>
+                  <div class="info-value" id="gGroup">Keluarga</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Level</div>
+                  <div class="info-value" id="gLevel">VIP</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Acara</div>
+                  <div class="info-value" id="gEvent">Akad, Resepsi</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Max RSVP</div>
+                  <div class="info-value" id="gRsvp">2 Orang</div>
+                </div>
+                <div class="info-item full">
+                  <div class="info-label" style="display:flex; align-items:center;">
+                    Kode Undangan
+                    <span id="btnToggleCode" onclick="toggleCode()"
+                      style="margin-left:8px; cursor:pointer; color:var(--sub); display:flex; align-items:center;"
+                      title="Lihat"></span>
+                  </div>
+                  <div class="info-value" id="gCode"
+                    style="letter-spacing: 2px; font-family: monospace; font-size: 16px;">••••••••</div>
+                </div>
+              </div>
+
+              <div class="action-container">
+                <button class="btn-action btn-wa" id="btnWa" onclick="triggerAction('wa')">
                   <svg class="icon-main" viewBox="0 0 24 24">
-                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                    <path
+                      d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                    </path>
                   </svg>
-                  <span>Copy URL</span>
+                  <span>Kirim via WhatsApp</span>
                 </button>
-                <button class="btn-action btn-copy" id="btnText" onclick="triggerAction('text')">
-                  <svg class="icon-main" viewBox="0 0 24 24">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+
+                <div class="actions-row">
+                  <button class="btn-action btn-copy" id="btnUrl" onclick="triggerAction('url')">
+                    <svg class="icon-main" viewBox="0 0 24 24">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                    </svg>
+                    <span>Copy URL</span>
+                  </button>
+                  <button class="btn-action btn-copy" id="btnText" onclick="triggerAction('text')">
+                    <svg class="icon-main" viewBox="0 0 24 24">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    <span>Copy Text</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="kc-footer">
+              <div class="kc-pagination-info">
+                Tamu <span id="pagCurrent">1</span> dari <span id="pagTotal">100</span>
+              </div>
+              <div class="kc-nav-btns">
+                <button class="btn-nav" id="btnPrev" onclick="navigate(-1)">
+                  <svg viewBox="0 0 24 24">
+                    <polyline points="15 18 9 12 15 6"></polyline>
                   </svg>
-                  <span>Copy Text</span>
+                  Prev
+                </button>
+                <button class="btn-nav" id="btnNext" onclick="navigate(1)">
+                  Next
+                  <svg viewBox="0 0 24 24">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
                 </button>
               </div>
             </div>
 
           </div>
 
-          <div class="kc-footer">
-            <div class="kc-pagination-info">
-              Tamu <span id="pagCurrent">1</span> dari <span id="pagTotal">100</span>
-            </div>
-            <div class="kc-nav-btns">
-              <button class="btn-nav" id="btnPrev" onclick="navigate(-1)">
-                <svg viewBox="0 0 24 24">
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-                Prev
-              </button>
-              <button class="btn-nav" id="btnNext" onclick="navigate(1)">
-                Next
-                <svg viewBox="0 0 24 24">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-        </div>
       </div>
     </div>
   </div>
@@ -925,6 +960,7 @@
 
     let filteredGuests = [...guestBook];
     let currentIndex = 0;
+    let currentFilterType = 'semua';
 
     // --- DOM ELEMENTS ---
     const elName = document.getElementById('gName');
@@ -1001,13 +1037,17 @@
 
       // Update Status Badge
       const anySent = guest.sentWA || guest.sentUrl || guest.sentText;
+      const btnUndoGlobal = document.getElementById('btnUndoGlobal');
       if (anySent) {
+        btnUndoGlobal.style.display = 'flex';
         statusBadge.className = 'kc-status-badge sent-all';
-        statusBadge.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg> Sudah Dikirim`;
+        statusBadge.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Sudah Dikirim</span>`;
       } else {
+        btnUndoGlobal.style.display = 'none';
         statusBadge.className = 'kc-status-badge';
-        statusBadge.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> Belum Dikirim`;
+        statusBadge.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> <span>Belum Dikirim</span>`;
       }
+
 
       // Update Pagination
       pagCurrent.innerText = index + 1;
@@ -1019,7 +1059,6 @@
       // Update Navigation Button States
       btnPrev.disabled = index === 0;
       btnNext.disabled = index === filteredGuests.length - 1;
-
       updateDashboardStats();
     }
 
@@ -1055,7 +1094,7 @@
 
       // Open WhatsApp or copy text
       if (type === 'wa') {
-        const text = `Halo ${guest.sapaan} ${guest.name},\nKami mengundang Anda untuk hadir di acara kami. Cek undangan: https://wevitation.com/undangan/${guest.id}`;
+        const text = `Halo ${guest.sapaan} ${guest.name},\nKami mengundang Anda untuk hadir di acara pernikahan kami. Cek undangan: https://wevitation.com/undangan/${guest.id}`;
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
       }
       if (type === 'url') console.log(`URL ${guest.name} dicopy...`);
@@ -1071,28 +1110,40 @@
     }
 
     function setFilter(filterType, btnEl) {
-      // Update Active Chip
-      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-      btnEl.classList.add('active');
+      if (btnEl) {
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        btnEl.classList.add('active');
+      }
+      currentFilterType = filterType;
+      applyFilters();
+    }
+
+    function applyFilters() {
+      let temp = guestBook;
 
       // Filter Logic
-      if (filterType === 'semua') {
-        filteredGuests = [...guestBook];
-      } else if (filterType === 'belum') {
-        filteredGuests = guestBook.filter(g => !(g.sentWA || g.sentUrl || g.sentText));
-      } else if (filterType === 'sudah') {
-        filteredGuests = guestBook.filter(g => (g.sentWA || g.sentUrl || g.sentText));
-      } else if (filterType === 'vip') {
-        filteredGuests = guestBook.filter(g => g.level.toLowerCase().includes('vip'));
+      if (currentFilterType === 'belum') {
+        temp = temp.filter(g => !(g.sentWA || g.sentUrl || g.sentText));
+      } else if (currentFilterType === 'sudah') {
+        temp = temp.filter(g => (g.sentWA || g.sentUrl || g.sentText));
       }
 
+      filteredGuests = temp;
       currentIndex = 0;
       if (filteredGuests.length > 0) {
         renderGuest(currentIndex);
       } else {
         card.style.display = 'none';
-        alert('Tidak ada tamu yang sesuai dengan filter ini.');
       }
+    }
+
+    function undoStatus(e) {
+      e.stopPropagation();
+      const guest = filteredGuests[currentIndex];
+      guest.sentWA = false;
+      guest.sentUrl = false;
+      guest.sentText = false;
+      renderGuest(currentIndex);
     }
 
     // --- INITIALIZE ---
